@@ -10,16 +10,16 @@ data_path = (
     / "WA_Fn-UseC_-Telco-Customer-Churn.csv"
 )
 
-# je verifie que le fichier existe
+## je verifie que le fichier existe
 if not data_path.exists():
     raise FileNotFoundError(
         f"Fichier introuvable : {data_path}"
     )
     
-# Je charge les données
+## Je charge les données
 df = pd.read_csv(data_path)
 
-# J'examine les premières lignes
+## J'examine les premières lignes
 print("Dimensions du jeu de données :", df.shape)
 print("\nPremières lignes :")
 print(df.head())
@@ -39,7 +39,7 @@ print("Identification dupliqués :", df["customerID"].duplicated().sum())
 
 print("\n--- Controle de TotalCharges ---")
 
-# Je detecte les chaines vides contenant uniquement les espaces
+## Je detecte les chaines vides contenant uniquement les espaces
 total_charges_nettoye = df["TotalCharges"].astype("string").str.strip()
 
 print(
@@ -47,7 +47,7 @@ print(
     total_charges_nettoye.eq("").sum()
 )
 
-# Je verifie quelles valeurs peuvent etre converties en nombres
+## Je verifie quelles valeurs peuvent etre converties en nombres
 total_charges_numériques = pd.to_numeric(
     total_charges_nettoye,
     errors="coerce"
@@ -66,3 +66,34 @@ taux_resiliation = (
     df["Churn"].eq("Yes").mean() * 100
 )
 print(f"Taux de résiliation : {taux_resiliation:.2f} %")
+
+## J'identifie les lignes où TotalCharges est vide
+print("\n--- clients avec TotalChrages vide ---")
+
+total_charges_nettoye = df["TotalCharges"].astype("string").str.strip()
+
+lignes_vides = df[total_charges_nettoye.eq("")]
+
+print(
+    lignes_vides[
+        ["customerID", "tenure", "MonthlyCharges", "TotalCharges", "Churn"]
+    ].to_string(index=False)
+)
+
+# Nettoyage de TotalCharges
+print("\n--- Nettoyage de TotalCharges ---")
+
+## Je supprime les exports au debut et à la fin
+df["TotalCharges"] = df["TotalCharges"].str.strip()
+
+## Je convertis en numérique: les chaines vides deviennent NaN
+df["TotalCharges"] = pd.to_numeric(
+    df["TotalCharges"],
+    errors="coerce"
+)
+
+print("Type après conersion :", df["TotalCharges"].dtype)
+print("Valeurs manquantes après conversion :", df["TotalCharges"].isna().sum())
+
+print("\nExemple des données néttoyées :")
+print(df[["customerID", "tenure", "TotalCharges"]].head())
