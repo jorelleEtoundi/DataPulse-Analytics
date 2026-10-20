@@ -134,7 +134,11 @@ print("\n--- Taux de resiliation par facturation mensuelle")
 df["GroupeFacturation"] = pd.cut (
     df["MonthlyCharges"],
     bins=[0, 35, 65, float("inf")],
-    labels=["Faible (<=35)", "Moyenne (>35 à 65)", "Elevee (<=65)"],
+    labels=[
+        "Faible (<=35)", 
+        "Moyenne (>35 à 65)", 
+        "Elevee (>65)"
+    ],
     include_lowest=True
 )
 
@@ -145,3 +149,24 @@ taux_par_facturation = (
 )
 
 print(taux_par_facturation)
+
+# Export des donnes néttoyé
+
+print("\n--- Export des données nettoyées ---")
+
+## Je determine le dossier racine du projet
+racine_projet = Path(__file__).resolve().parent.parent
+
+## Je crée le dossier processed s'il n'existe pas
+dossier_processed = racine_projet / "data" / "processed"
+dossier_processed.mkdir(parents=True, exist_ok=True)
+
+## Je definis le chemin du fichier de sortie
+fichier_sortie = dossier_processed / "telco_clean.csv"
+
+## J'enregistre les données nettoyées
+df.to_csv(fichier_sortie, index=False)
+
+print("Fichier enregistré :", fichier_sortie)
+print("Nombre de lignes exportées :", len(df))
+print("Nombre de colonnes exportées :", len(df.columns))
