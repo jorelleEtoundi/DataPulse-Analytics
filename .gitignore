@@ -1,0 +1,23 @@
+cat > .gitignore <<'EOF'
+# Environnement Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Fichiers macOS
+.DS_Store
+
+# Fichiers de données brutes
+data/raw/*
+!data/raw/.gitkeep
+
+# Secrets et variables d'environnement
+.env
+.env.*
+!.env.example
+
+# Outils et éditeurs
+.vscode/
+.idea/
+EOF
