@@ -97,3 +97,51 @@ print("Valeurs manquantes après conversion :", df["TotalCharges"].isna().sum())
 
 print("\nExemple des données néttoyées :")
 print(df[["customerID", "tenure", "TotalCharges"]].head())
+
+# Analyse metier
+
+## Analyse du taux de rsiliation par type de contrat
+print("\n--- Taux de résiliation par contrat")
+
+taux_par_contrat = (
+    df.groupby("Contract", observed=True)["Churn"]
+    .apply(lambda serie :serie.eq("Yes").mean() * 100)
+    .round(2)
+    .sort_values(ascending=False)
+)
+
+print(taux_par_contrat)
+
+## Analyse par taux de resiliation selon l'ancienneté
+print("\n--- Taux de resiliation par ancienneté ---")
+
+df["GroupeAnciennete"] = pd.cut(
+    df["tenure"],
+    bins=[-1, 12, 24, 48, 72],
+    labels=["0-12 mois", "13-24 mois", "25-48 mois", "49-72 mois"]
+)
+
+taux_par_anciennete = (
+    df.groupby("GroupeAnciennete", observed=True)["Churn"]
+    .apply(lambda serie : serie.eq("Yes").mean() * 100)
+    .round(2)
+)
+
+print(taux_par_anciennete)
+## Analyse par taux de resiliation selon la facturation mensuelle
+print("\n--- Taux de resiliation par facturation mensuelle")
+
+df["GroupeFacturation"] = pd.cut (
+    df["MonthlyCharges"],
+    bins=[0, 35, 65, float("inf")],
+    labels=["Faible (<=35)", "Moyenne (>35 à 65)", "Elevee (<=65)"],
+    include_lowest=True
+)
+
+taux_par_facturation = (
+    df.groupby("GroupeFacturation", observed=True)["Churn"]
+    .apply(lambda serie : serie.eq("Yes").mean() * 100)
+    .round(2)
+)
+
+print(taux_par_facturation)
