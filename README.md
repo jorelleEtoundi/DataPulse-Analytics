@@ -77,6 +77,8 @@ DataPulse-Analytics/
 
 ## Tableau de bord Power BI
 
+![Tableau de bord DataPulse Analytics](images/datapulse-dashboard.png)
+
 Un tableau de bord a été créé dans Power BI Web pour présenter les indicateurs clés et explorer la résiliation selon plusieurs caractéristiques des clients.
 
 Le rapport est enregistré dans l'espace de travail Power BI. Son accessibilité à des personnes externes reste à vérifier.
